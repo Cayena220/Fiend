@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fiend</title>
+  <meta name="description" content="Fiend clears caches, maps your disks and hunts disguised, packed and known-bad files on Windows. Rust engine, Flutter interface, Microsoft Defender as a second opinion.">
+  <meta name="theme-color" content="#0B0A10">
+  <meta property="og:title" content="Fiend for Windows">
+  <meta property="og:description" content="Clean caches, map your disks, and hunt what hides on your PC.">
+  <meta property="og:image" content="/assets/overview.png">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@600;800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav" id="top">
+    <div class="wrap nav-row">
+      <a class="brand" href="#top" aria-label="Fiend home">
+        <svg class="sigil" viewBox="0 0 100 72" aria-hidden="true"><path class="eye" d="M4 36 Q50 -13 96 36 Q50 85 4 36 Z"/><path class="pupil" d="M50 10 Q64 36 50 62 Q36 36 50 10 Z"/></svg>
+        <span>FIEND</span>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#tools">Tools</a>
+        <a href="#decides">How it decides</a>
+        <a href="#yours">Customize</a>
+        <a href="#safety">Safety</a>
+      </nav>
+      <a class="btn btn-primary btn-small" href="#download">Download</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">For Windows 10 &amp; 11 · free · <span data-release="installer.sizeLabel">11.0 MB</span></p>
+        <h1>It hunts what hides on your PC.</h1>
+        <p class="lead">Fiend clears the caches Windows and your browsers leave behind, maps where your disk space went, and flags disguised, packed and known-bad files. Microsoft Defender gives a second opinion on anything serious.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="/downloads/Fiend-1.0.0-setup.exe" data-release="installer.href">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+            Download Fiend <span data-release="version">1.0.0</span>
+          </a>
+          <a class="btn btn-ghost" href="#decides">See how it decides</a>
+        </div>
+        <p class="fineprint">64-bit installer · no admin rights · SHA-256 <code data-release="installer.shortHash">b800feb5…6190b4e6</code> · or the <a href="#download">portable zip</a></p>
+
+        <figure class="shot hero-shot">
+          <img src="/assets/overview.png" width="1650" height="1075" alt="Fiend's Overview screen: a health score of 63, drive usage for C:, D: and E:, and 6.0 GB of reclaimable cache.">
+        </figure>
+      </div>
+    </section>
+
+    <section class="band" id="tools">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Three tools, one window</p>
+          <h2>Clean, map, hunt.</h2>
+        </div>
+
+        <div class="tools">
+          <article class="tool">
+            <h3>Cleaner</h3>
+            <p>Measures 13 cache locations: Temp, Windows Update downloads, thumbnails, shader caches, crash dumps, error reports, the Recycle Bin, and Chrome, Edge, Brave and Firefox. It keeps anything newer than a day unless you choose otherwise, and skips files in use.</p>
+            <dl class="facts"><div><dt>Preview</dt><dd>see the total before deleting</dd></div><div><dt>Your folders</dt><dd>add any app's cache</dd></div></dl>
+          </article>
+          <article class="tool">
+            <h3>Disk</h3>
+            <p>Walks every folder in parallel and ranks what it finds. A treemap shows the biggest folders at a glance, a breakdown sorts space by file type, and the largest files are one click from Explorer or the Recycle Bin.</p>
+            <dl class="facts"><div><dt>Cloud-aware</dt><dd>OneDrive placeholders count as 0 bytes</dd></div><div><dt>Undoable</dt><dd>deletions go to the Recycle Bin</dd></div></dl>
+          </article>
+          <article class="tool">
+            <h3>Shield</h3>
+            <p>Scores each file from 0 to 100 using evidence you can read. It checks disguised names, program code behind picture names, packed contents, signatures, risky script commands and known-bad hashes. It also reviews every program that starts with Windows.</p>
+            <dl class="facts"><div><dt>Quarantine</dt><dd>scrambled, restorable, never auto-deleted</dd></div><div><dt>Second opinion</dt><dd>Microsoft Defender, built in</dd></div></dl>
+          </article>
+        </div>
+
+        <div class="viewer">
+          <div class="tabs" role="tablist" aria-label="Screens">
+            <button role="tab" id="tab-overview" aria-selected="true" aria-controls="viewer-panel" data-shot="overview">Overview</button>
+            <button role="tab" id="tab-cleaner" aria-selected="false" aria-controls="viewer-panel" data-shot="cleaner">Cleaner</button>
+            <button role="tab" id="tab-disk" aria-selected="false" aria-controls="viewer-panel" data-shot="disk">Disk</button>
+            <button role="tab" id="tab-shield" aria-selected="false" aria-controls="viewer-panel" data-shot="shield">Shield</button>
+            <button role="tab" id="tab-customize" aria-selected="false" aria-controls="viewer-panel" data-shot="customize">Customize</button>
+          </div>
+          <figure class="shot" id="viewer-panel" role="tabpanel" aria-labelledby="tab-overview">
+            <img id="viewer-img" src="/assets/overview.png" width="1650" height="1075" alt="Fiend's Overview screen.">
+          </figure>
+          <p class="caption" id="viewer-caption">The Overview rolls storage, clutter, threats and scan age into one health score, with a fix next to each.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-alt" id="decides">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">How Fiend decides</p>
+          <h2>Every flag shows its evidence.</h2>
+          <p class="sub">Each signal adds points. A file is reported once its score reaches your sensitivity threshold. A verified publisher signature takes points away; a known-bad hash or a Defender detection goes straight to 100.</p>
+        </div>
+
+        <div class="decide">
+          <div class="ledger" aria-label="Example finding">
+            <div class="ledger-head">
+              <span class="sev sev-high">High · 75</span>
+              <span class="file">invoice_0425.pdf.exe</span>
+            </div>
+            <p class="path">C:\Users\Alex\Downloads\invoice_0425.pdf.exe</p>
+            <ol class="lines">
+              <li><span class="w">+60</span>Looks like a .pdf file but runs as .exe</li>
+              <li><span class="w">+15</span>Runnable file in Downloads, a folder malware often uses</li>
+              <li class="total"><span class="w">75</span>Reported at every sensitivity</li>
+            </ol>
+          </div>
+
+          <div class="threshold">
+            <div class="threshold-head">
+              <h3>Sensitivity</h3>
+              <div class="seg" role="radiogroup" aria-label="Sensitivity">
+                <button role="radio" aria-checked="false" data-threshold="50">Relaxed</button>
+                <button role="radio" aria-checked="true" data-threshold="30">Balanced</button>
+                <button role="radio" aria-checked="false" data-threshold="15">Paranoid</button>
+              </div>
+            </div>
+            <div class="scale" aria-hidden="true">
+              <div class="scale-bar"><span class="zone low"></span><span class="zone medium"></span><span class="zone high"></span></div>
+              <div class="marker" id="marker"><span id="marker-label">30</span></div>
+              <div class="ticks"><span style="left:0%">0</span><span style="left:40%">40 medium</span><span style="left:70%">70 high</span><span style="left:100%">100</span></div>
+            </div>
+            <ul class="samples" id="samples">
+              <li data-score="75"><b>75</b><span>invoice_0425.pdf.exe</span><em>disguised extension</em></li>
+              <li data-score="70"><b>70</b><span>update.vbs</span><em>encoded PowerShell, hidden window</em></li>
+              <li data-score="55"><b>55</b><span>photoshop_full_unlocked.exe</span><em>packed, unsigned, in Downloads</em></li>
+              <li data-score="35"><b>35</b><span>portable-tool.exe</span><em>unsigned, in Downloads</em></li>
+              <li data-score="30"><b>30</b><span>old-installer.exe</span><em>packed, expired signature</em></li>
+              <li data-score="15"><b>15</b><span>helper.exe</span><em>in Temp, signature not checked</em></li>
+              <li data-score="0"><b>0</b><span>setup.exe</span><em>signed by a verified publisher</em></li>
+            </ul>
+            <p class="samples-note" id="samples-note">Balanced reports 5 of these 7 files.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="signals">
+            <caption>Signals and their weights</caption>
+            <thead><tr><th scope="col">Signal</th><th scope="col">Example</th><th scope="col" class="num">Points</th></tr></thead>
+            <tbody>
+              <tr><td>Known-bad SHA-256 hash</td><td>On the MalwareBazaar feed or your own list</td><td class="num">100</td></tr>
+              <tr><td>Microsoft Defender detection</td><td>Asked for every medium and high finding</td><td class="num">100</td></tr>
+              <tr><td>Right-to-left override in the name</td><td><code>cv</code> + hidden <code>U+202E</code> + <code>fdp.exe</code> reads as <code>cvexe.pdf</code></td><td class="num">+70</td></tr>
+              <tr><td>Document name, program extension</td><td><code>invoice.pdf.exe</code></td><td class="num">+60</td></tr>
+              <tr><td>Program code behind a picture or document name</td><td><code>holiday.jpg</code> that starts with <code>MZ</code></td><td class="num">+55</td></tr>
+              <tr><td>Ransomware-style script commands</td><td><code>vssadmin delete shadows</code></td><td class="num">up to +45</td></tr>
+              <tr><td>Spaces hiding the real extension</td><td><code>photo.jpg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.scr</code></td><td class="num">+40</td></tr>
+              <tr><td>Invalid or untrusted signature</td><td>Tampered or self-signed program</td><td class="num">+35</td></tr>
+              <tr><td>Hidden system file in your user folder</td><td>Executable with Hidden and System set</td><td class="num">+30</td></tr>
+              <tr><td>Packed or encrypted contents</td><td>Entropy above 7.2 bits per byte</td><td class="num">+20</td></tr>
+              <tr><td>No digital signature</td><td>Only counted in risky folders</td><td class="num">+20</td></tr>
+              <tr><td>Runnable file in a risky folder</td><td>Downloads, Temp, loose in AppData, Public, Startup</td><td class="num">+15</td></tr>
+              <tr><td>Expired signature</td><td>Old but genuine installers</td><td class="num">+10</td></tr>
+              <tr class="neg"><td>Signed by a verified publisher</td><td>Checked with Windows' own WinVerifyTrust</td><td class="num">−40</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="yours">
+      <div class="wrap yours">
+        <div>
+          <div class="section-head">
+            <p class="eyebrow">Make it yours</p>
+            <h2>Pick your poison.</h2>
+            <p class="sub">Five accents and three depths of dark, all applied the moment you click. Try one here; this page changes with it.</p>
+          </div>
+          <div class="swatches" role="radiogroup" aria-label="Accent color">
+            <button role="radio" aria-checked="true" data-accent="hellfire" style="--c:#FF3B4E"><span></span>Hellfire</button>
+            <button role="radio" aria-checked="false" data-accent="ember" style="--c:#FF7A2F"><span></span>Ember</button>
+            <button role="radio" aria-checked="false" data-accent="toxic" style="--c:#7CE85A"><span></span>Toxic</button>
+            <button role="radio" aria-checked="false" data-accent="spectral" style="--c:#A77BFF"><span></span>Spectral</button>
+            <button role="radio" aria-checked="false" data-accent="ice" style="--c:#4CC9F0"><span></span>Ice</button>
+          </div>
+          <ul class="options">
+            <li><b>Depth</b>Abyss, Midnight or Slate</li>
+            <li><b>Density</b>Comfortable or compact</li>
+            <li><b>Corners</b>2 to 18 px</li>
+            <li><b>Glow and motion</b>On, off, or reduced</li>
+            <li><b>Overview</b>Reorder or hide every card</li>
+            <li><b>Cleaner</b>Age limit, your own cache folders, exclusions</li>
+            <li><b>Shield</b>Sensitivity, extra scan folders, exclusions, trusted files</li>
+            <li><b>Automation</b>Scan on launch, auto-quarantine high risk</li>
+          </ul>
+        </div>
+        <figure class="shot">
+          <img id="accent-img" src="/assets/overview.png" width="1650" height="1075" alt="Fiend's Overview screen in the Hellfire accent.">
+        </figure>
+      </div>
+    </section>
+
+    <section class="band band-alt" id="safety">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Safety</p>
+          <h2>What Fiend won't do.</h2>
+        </div>
+        <ul class="promises">
+          <li><h3>Delete a flagged file on its own</h3><p>Quarantine moves it into Fiend's vault with its bytes scrambled so it can't run. Restore puts it back exactly where it was.</p></li>
+          <li><h3>Clear what you're using</h3><p>Files newer than a day are kept by default and locked files are skipped. Disk deletions go to the Recycle Bin.</p></li>
+          <li><h3>Send your files anywhere</h3><p>Scanning happens on your PC. The only network request is the optional download of MalwareBazaar's public hash list.</p></li>
+          <li><h3>Replace your antivirus</h3><p>Fiend catches common tricks and asks Defender about anything serious. Keep Windows Security turned on.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band" id="download">
+      <div class="wrap">
+        <div class="download">
+          <div class="dl-main">
+            <p class="eyebrow">Download</p>
+            <h2>Fiend <span data-release="version">1.0.0</span> for Windows</h2>
+            <p class="sub">Windows 10 or 11, 64-bit. The installer sets Fiend up for your account only, so it needs no admin rights.</p>
+            <div class="dl-actions">
+              <a class="btn btn-primary btn-large" href="/downloads/Fiend-1.0.0-setup.exe" data-release="installer.href">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+                Download the installer
+              </a>
+              <a class="btn btn-ghost btn-large" href="/downloads/Fiend-1.0.0-win-x64.zip" data-release="zip.href">Portable zip</a>
+            </div>
+            <dl class="dl-meta">
+              <div><dt>Installer</dt><dd><span data-release="installer.file">Fiend-1.0.0-setup.exe</span> · <span data-release="installer.sizeLabel">11.0 MB</span></dd></div>
+              <div class="hash"><dt>SHA-256</dt><dd><code id="hash-installer" data-release="installer.sha256">b800feb57a8a14dcbfa5b5a8638bc5355df1d7e6c32cafb4ca04db166190b4e6</code><button class="copy" type="button" data-copy="hash-installer" aria-label="Copy the installer's SHA-256">Copy</button></dd></div>
+              <div class="group"><dt>Zip</dt><dd><span data-release="zip.file">Fiend-1.0.0-win-x64.zip</span> · <span data-release="zip.sizeLabel">12.2 MB</span> · unzip anywhere, no setup</dd></div>
+              <div class="hash"><dt>SHA-256</dt><dd><code id="hash-zip" data-release="zip.sha256">b5632813c268979c4999d442b374b3d5e7bcf2f65a0cb770064a5c5bf5363bee</code><button class="copy" type="button" data-copy="hash-zip" aria-label="Copy the zip's SHA-256">Copy</button></dd></div>
+              <div class="group"><dt>Built</dt><dd data-release="built">2026-10-20</dd></div>
+            </dl>
+          </div>
+          <ol class="steps">
+            <li><h3>Run the installer</h3><p>Open <code data-release="installer.file">Fiend-1.0.0-setup.exe</code>. It installs to <code>%LOCALAPPDATA%\Programs\Fiend</code> and adds Fiend to the Start menu. Prefer the zip? Extract it anywhere and run <code>Fiend.exe</code>, keeping <code>fiend_core.dll</code> beside it.</p></li>
+            <li><h3>Get past SmartScreen</h3><p>This build isn't code-signed yet, so Windows may warn you. Choose <b>More info</b>, then <b>Run anyway</b>.</p></li>
+            <li><h3>Check the file, if you like</h3><p>In PowerShell, compare this with the SHA-256 for the file you downloaded:</p><pre><code>Get-FileHash .\<span data-release="installer.file">Fiend-1.0.0-setup.exe</span></code></pre></li>
+            <li><h3>Uninstall any time</h3><p>Use <b>Settings › Apps › Installed apps</b>. Your settings and quarantined files in <code>%APPDATA%\Fiend</code> stay unless you tick the box to delete them.</p></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-row">
+      <span class="brand small"><svg class="sigil" viewBox="0 0 100 72" aria-hidden="true"><path class="eye" d="M4 36 Q50 -13 96 36 Q50 85 4 36 Z"/><path class="pupil" d="M50 10 Q64 36 50 62 Q36 36 50 10 Z"/></svg>FIEND</span>
+      <p>Rust engine, Flutter interface. Hash feed courtesy of <a href="https://bazaar.abuse.ch/" rel="noopener">MalwareBazaar</a> by abuse.ch.</p>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Build output
+core/target/
+app/build/
+app/.dart_tool/
+app/.flutter-plugins-dependencies
+app/windows/flutter/ephemeral/
+
+# Release binaries are published on the website, not stored in git
+web/downloads/*.exe
+web/downloads/*.zip
+
+# Secrets and local tool state
+.env
+.env.*
+.vercel/
+web/.vercel/
+.claude/

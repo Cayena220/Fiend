@@ -1,0 +1,42 @@
+﻿[package]
+name = "fiend_core"
+version = "0.1.0"
+edition = "2021"
+description = "Fiend engine: cache cleaning, disk analysis and threat detection for Windows"
+license = "MIT"
+
+[lib]
+name = "fiend_core"
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "fiend-cli"
+path = "src/bin/fiend-cli.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+walkdir = "2"
+rayon = "1"
+sha2 = "0.10"
+dirs = "6"
+winreg = "0.55"
+windows-sys = { version = "0.59", features = [
+    "Win32_Foundation",
+    "Win32_Storage_FileSystem",
+    "Win32_UI_Shell",
+    "Win32_Security_WinTrust",
+    "Win32_Security_Cryptography",
+    "Win32_System_Registry",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = true
+
