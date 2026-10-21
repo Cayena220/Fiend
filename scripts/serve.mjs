@@ -1,12 +1,14 @@
-// Minimal static server for previewing web/ locally: node scripts/serve.mjs [port]
+// Minimal static server for previewing web/ locally: node scripts/serve.mjs [port] [folder]
+// (pass a folder to serve something else, such as a test update feed).
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = resolve(fileURLToPath(new URL('../web', import.meta.url)));
+const root = process.argv[3] ? resolve(process.argv[3]) : resolve(fileURLToPath(new URL('../web', import.meta.url)));
 const port = Number(process.argv[2] ?? 4173);
 const types = {
+  '.exe': 'application/octet-stream',
   '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript',
   '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.zip': 'application/zip',
 };

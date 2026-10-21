@@ -53,13 +53,24 @@ function Describe($file) {
     $item = Get-Item (Join-Path $downloads $file)
     [ordered]@{ file = $file; size = $item.Length; sha256 = (Get-FileHash -Algorithm SHA256 $item.FullName).Hash.ToLower() }
 }
+# The "## <version>" bullets in CHANGELOG.md become the notes in Fiend's update popup.
+$notes = @()
+$inSection = $false
+foreach ($line in [IO.File]::ReadAllLines("$root\CHANGELOG.md", [Text.Encoding]::UTF8)) {
+    if ($line -match '^##\s+(\S+)') { $inSection = ($Matches[1] -eq $version); continue }
+    if ($inSection -and $line -match '^\s*-\s+(.+)$') { $notes += $Matches[1].Trim() }
+}
+if (-not $notes) { Write-Warning "CHANGELOG.md has no notes for $version" }
+
 $info = [ordered]@{
     version   = $version
     built     = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+    notes     = $notes
     installer = Describe $setupName
     zip       = Describe $name
 }
-$info | ConvertTo-Json | Set-Content -Encoding ascii "$downloads\release.json"
+# UTF-8 without a BOM so the notes keep their punctuation and the app's JSON parser is happy.
+[IO.File]::WriteAllText("$downloads\release.json", ($info | ConvertTo-Json -Depth 4), (New-Object Text.UTF8Encoding $false))
 
 foreach ($pack in $info.installer, $info.zip) {
     Write-Host "Packed $($pack.file) ($([math]::Round($pack.size / 1MB, 1)) MB)" -ForegroundColor Green

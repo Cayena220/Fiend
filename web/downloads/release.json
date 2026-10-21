@@ -1,14 +1,19 @@
 {
-    "version":  "1.1.0",
+    "version":  "1.2.0",
     "built":  "2026-10-21",
+    "notes":  [
+                  "Fiend now checks for updates when it opens and offers to install them in one click.",
+                  "Updates are downloaded, checked against their published SHA-256, and installed silently, and Fiend reopens on its own.",
+                  "Check for updates any time, or switch the check off, under Customize › About."
+              ],
     "installer":  {
-                      "file":  "Fiend-1.1.0-setup.exe",
-                      "size":  11566832,
-                      "sha256":  "c0cc55718bf88ea20e1fedbb14e54b84f613b2f1b961a3b7130fb6771ee3662d"
+                      "file":  "Fiend-1.2.0-setup.exe",
+                      "size":  11596627,
+                      "sha256":  "8ada6a4189c91e1168aaf23c2e5297a604733cf51861e850cd3936a27f28b724"
                   },
     "zip":  {
-                "file":  "Fiend-1.1.0-win-x64.zip",
-                "size":  12878883,
-                "sha256":  "9930ecda5ea77c3947bf94f3519e95f367299b32d87e27235b405cdef4412b8c"
+                "file":  "Fiend-1.2.0-win-x64.zip",
+                "size":  12916517,
+                "sha256":  "4b0e50dfc418da6c7cd9be103654633ffbe7781ec71bbc386d41ffe8d78773bb"
             }
 }

@@ -13,6 +13,7 @@ class AppState extends ChangeNotifier {
 
   final FiendBridge bridge;
   final messenger = GlobalKey<ScaffoldMessengerState>();
+  final navigator = GlobalKey<NavigatorState>();
 
   Settings settings = Settings.defaults();
   SystemInfo? system;

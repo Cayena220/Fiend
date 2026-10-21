@@ -43,6 +43,7 @@ pub fn dispatch(method: &str, p: Value) -> Result<Value, String> {
         "system.info" => Ok(system::info()),
         "system.relaunch_admin" => system::relaunch_admin().map(|_| json!(true)),
         "system.reveal" => system::reveal(&path_param(&p)?).map(|_| json!(true)),
+        "update.install" => system::install_update(&path_param(&p)?).map(|_| json!(true)),
 
         "drives.list" => to_value(disk::list_drives()),
         "drives.health" => to_value(health::report(settings::load().disk.life_warning)),

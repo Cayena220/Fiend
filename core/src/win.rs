@@ -113,6 +113,32 @@ pub fn send_to_recycle_bin(paths: &[&Path]) -> Result<(), String> {
     }
 }
 
+/// "major.minor.patch" from a file's version resource (Flutter stamps it from pubspec.yaml).
+pub fn file_version(path: &Path) -> Option<String> {
+    use windows_sys::Win32::Storage::FileSystem::{GetFileVersionInfoSizeW, GetFileVersionInfoW, VerQueryValueW};
+    let w = wide_path(path);
+    let size = unsafe { GetFileVersionInfoSizeW(w.as_ptr(), null_mut()) };
+    if size == 0 {
+        return None;
+    }
+    let mut buf = vec![0u8; size as usize];
+    if unsafe { GetFileVersionInfoW(w.as_ptr(), 0, size, buf.as_mut_ptr() as *mut _) } == 0 {
+        return None;
+    }
+    let root = wide("\\");
+    let mut info: *mut std::ffi::c_void = null_mut();
+    let mut len = 0u32;
+    if unsafe { VerQueryValueW(buf.as_ptr() as *const _, root.as_ptr(), &mut info, &mut len) } == 0 || len < 16 {
+        return None;
+    }
+    // VS_FIXEDFILEINFO: dwFileVersionMS at byte 8, dwFileVersionLS at byte 12.
+    let (ms, ls) = unsafe {
+        let p = info as *const u32;
+        (p.add(2).read_unaligned(), p.add(3).read_unaligned())
+    };
+    Some(format!("{}.{}.{}", ms >> 16, ms & 0xFFFF, ls >> 16))
+}
+
 pub fn is_admin() -> bool {
     unsafe { IsUserAnAdmin() != 0 }
 }

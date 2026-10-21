@@ -43,6 +43,7 @@ class Settings {
           'max_file_mb': 200,
         },
         'disk': {'large_file_mb': 500, 'top_files': 50, 'temperature_unit': 'c', 'life_warning': 20},
+        'updates': {'check_on_launch': true, 'skipped_version': ''},
       }));
 
   final Map<String, dynamic> raw;
@@ -98,6 +99,9 @@ class Settings {
   int get topFiles => get('disk', 'top_files', 50);
   String get temperatureUnit => get('disk', 'temperature_unit', 'c');
   int get lifeWarning => get('disk', 'life_warning', 20);
+
+  bool get checkUpdates => get('updates', 'check_on_launch', true);
+  String get skippedVersion => get('updates', 'skipped_version', '');
 }
 
 class SystemInfo {
@@ -112,6 +116,9 @@ class SystemInfo {
   bool get defender => _b(j['defender']);
   String get dataDir => _s(j['data_dir']);
   String get coreVersion => _s(j['core_version']);
+  /// From Fiend.exe's version resource; null when running without one.
+  String? get appVersion => _sOrNull(j['app_version']);
+  String get exePath => _s(j['exe_path']);
 }
 
 class EngineState {

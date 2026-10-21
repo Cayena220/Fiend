@@ -12,6 +12,22 @@ pub struct Settings {
     pub cleaner: Cleaner,
     pub shield: Shield,
     pub disk: DiskPrefs,
+    pub updates: Updates,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[serde(default)]
+pub struct Updates {
+    /// Look for a newer release each time Fiend opens.
+    pub check_on_launch: bool,
+    /// A version the user chose to skip; it won't pop up again.
+    pub skipped_version: String,
+}
+
+impl Default for Updates {
+    fn default() -> Self {
+        Self { check_on_launch: true, skipped_version: String::new() }
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]

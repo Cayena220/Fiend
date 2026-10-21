@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../core/release.dart';
 import '../state/app_state.dart';
 import '../state/shield_state.dart';
+import '../state/update_state.dart';
 import '../theme/theme.dart';
 import '../theme/tokens.dart';
 import 'screens/cleaner.dart';
@@ -16,6 +18,7 @@ import 'screens/settings.dart';
 import 'screens/shield.dart';
 import 'widgets/common.dart';
 import 'widgets/sigil.dart';
+import 'widgets/update_dialog.dart';
 
 class Shell extends StatelessWidget {
   const Shell({super.key, this.desktop = true});
@@ -192,6 +195,10 @@ class _Sidebar extends StatelessWidget {
               badge: shield.openFindings, badgeColor: high > 0 ? dangerColor : warnColor),
           item(Section.quarantine, Icons.lock_outline_rounded, 'Quarantine', badge: app.quarantine.length, badgeColor: fx.muted),
           const Spacer(),
+          if (context.watch<UpdateState>().available case final release?) ...[
+            _UpdateChip(release: release, wide: wide),
+            const SizedBox(height: 8),
+          ],
           item(Section.settings, Icons.tune_rounded, 'Customize'),
           const SizedBox(height: 10),
           if (wide) _AdminCard(app: app),
@@ -344,4 +351,46 @@ class _MaybeTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       message == null ? child : Tooltip(message: message!, child: child);
+}
+/// Stays in the sidebar after "Later" so a waiting update is one click away.
+class _UpdateChip extends StatelessWidget {
+  const _UpdateChip({required this.release, required this.wide});
+  final Release release;
+  final bool wide;
+
+  @override
+  Widget build(BuildContext context) {
+    final fx = Fx.of(context);
+    final updates = context.read<UpdateState>();
+    void open() => showUpdateDialog(context, updates, release);
+    if (!wide) {
+      return Tooltip(
+        message: 'Fiend ${release.version} is available',
+        child: IconButton(onPressed: open, icon: Icon(Icons.system_update_alt_rounded, color: fx.accent)),
+      );
+    }
+    return Material(
+      color: fx.accentSoft,
+      borderRadius: BorderRadius.circular(fx.radius),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(fx.radius),
+        onTap: open,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(fx.radius),
+            border: Border.all(color: fx.accent.withValues(alpha: 0.45)),
+          ),
+          child: Row(children: [
+            Icon(Icons.system_update_alt_rounded, size: 18, color: fx.accent),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text('Update to ${release.version}',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: fx.text)),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
 }

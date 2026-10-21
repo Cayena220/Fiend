@@ -69,6 +69,8 @@ Name: "{autodesktop}\Fiend"; Filename: "{app}\Fiend.exe"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\Fiend.exe"; Description: "{cm:LaunchProgram,Fiend}"; Flags: nowait postinstall skipifsilent
+; In-app updates run Setup silently with /UPDATE; reopen Fiend when they finish.
+Filename: "{app}\Fiend.exe"; Flags: nowait; Check: IsUpdate
 
 [Code]
 // Settings, scan state, signatures and the quarantine vault live in %APPDATA%\Fiend.
@@ -89,6 +91,12 @@ begin
   for I := 1 to ParamCount do
     if CompareText(ParamStr(I), Name) = 0 then
       Result := True;
+end;
+
+// Fiend's in-app updater passes /UPDATE.
+function IsUpdate(): Boolean;
+begin
+  Result := HasSwitch('/UPDATE');
 end;
 
 // Shown after Uninstall's own "Are you sure?" prompt and its check that Fiend isn't

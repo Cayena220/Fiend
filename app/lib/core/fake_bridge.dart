@@ -40,7 +40,9 @@ class FakeBridge implements FiendBridge {
           'admin': false,
           'defender': true,
           'data_dir': r'C:\Users\Alex\AppData\Roaming\Fiend',
-          'core_version': '0.1.0',
+          'core_version': '0.3.0',
+          'app_version': '1.1.0',
+          'exe_path': r'C:\Users\Alex\AppData\Local\Programs\Fiend\Fiend.exe',
         };
       case 'state.get':
         return {'last_scan_at': _now - 2 * 86400, 'last_scan_mode': 'quick', 'last_scan_findings': 2, 'total_freed': 0};

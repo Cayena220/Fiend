@@ -14,7 +14,7 @@
   <img alt="Windows 10 and 11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white">
   <img alt="Rust engine" src="https://img.shields.io/badge/engine-Rust-B7410E?style=flat-square&logo=rust&logoColor=white">
   <img alt="Flutter interface" src="https://img.shields.io/badge/UI-Flutter-02569B?style=flat-square&logo=flutter&logoColor=white">
-  <img alt="Version 1.1.0" src="https://img.shields.io/badge/version-1.1.0-2E2A3B?style=flat-square">
+  <img alt="Version 1.2.0" src="https://img.shields.io/badge/version-1.2.0-2E2A3B?style=flat-square">
 </p>
 
 <p align="center">
@@ -52,6 +52,7 @@
 | **Shield** | Scores files 0–100 using evidence you can read, checks a SHA-256 blocklist (MalwareBazaar or your own), verifies Authenticode signatures, reviews everything that starts with Windows, and asks Microsoft Defender about anything serious. |
 | **Quarantine** | Flagged files are moved into a vault with their bytes scrambled so they can't run. Restore puts them back exactly where they were. |
 | **Customize** | Accent, depth, density, corners, glow, motion, Overview card order, and every scan and clean rule. |
+| **Updates** | When Fiend opens it checks for a newer release and pops up what's new. **Update now** downloads the installer, checks it against its published SHA-256, installs it silently and reopens Fiend. You can skip a version or turn the check off. |
 
 ## Screenshots
 
@@ -111,14 +112,17 @@ Settings live in `%APPDATA%\Fiend\settings.json`.
 
 Get the latest build from **[fiend-delta.vercel.app](https://fiend-delta.vercel.app/#download)**:
 
-- **Installer** (`Fiend-1.1.0-setup.exe`): per user, no admin rights. Installs to
+- **Installer** (`Fiend-1.2.0-setup.exe`): per user, no admin rights. Installs to
   `%LOCALAPPDATA%\Programs\Fiend` with a Start menu shortcut. The uninstaller keeps your
   settings and quarantine unless you tick the box to remove them.
-- **Portable zip** (`Fiend-1.1.0-win-x64.zip`): unzip anywhere and run `Fiend.exe`.
+- **Portable zip** (`Fiend-1.2.0-win-x64.zip`): unzip anywhere and run `Fiend.exe`.
+
+From 1.2.0 on, Fiend updates itself: a popup offers each new version, and the
+[changelog](CHANGELOG.md) lists what changed.
 
 Fiend isn't code-signed yet, so SmartScreen may warn on first run: choose **More info**, then
 **Run anyway**. The site lists the SHA-256 of both files; check yours with
-`Get-FileHash .\Fiend-1.1.0-setup.exe`.
+`Get-FileHash .\Fiend-1.2.0-setup.exe`.
 
 Requires Windows 10 or 11, 64-bit. Run as administrator to clean system-wide caches.
 

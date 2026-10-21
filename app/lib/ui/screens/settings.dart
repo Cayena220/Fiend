@@ -5,10 +5,12 @@ import 'package:provider/provider.dart';
 import '../../core/format.dart';
 import '../../core/models.dart';
 import '../../state/app_state.dart';
+import '../../state/update_state.dart';
 import '../../theme/theme.dart';
 import '../../theme/tokens.dart';
 import '../shell.dart';
 import '../widgets/common.dart';
+import '../widgets/update_dialog.dart';
 import 'dashboard.dart' show dashboardCardLabels;
 
 class SettingsScreen extends StatelessWidget {
@@ -205,9 +207,17 @@ class SettingsScreen extends StatelessWidget {
         title: 'About',
         children: [
           SettingRow(
-            title: 'Fiend 1.1',
+            title: 'Fiend ${app.system?.appVersion ?? ''}'.trim(),
             description: 'Engine ${app.system?.coreVersion ?? '?'} · ${app.system?.os ?? ''} build ${app.system?.build ?? ''}',
             control: FButton('Open data folder', icon: Icons.folder_open_outlined, dense: true, onPressed: () => app.reveal(app.system?.dataDir ?? '')),
+          ),
+          const _UpdateRow(),
+          SettingRow(
+            title: 'Check for updates when Fiend opens',
+            description: s.skippedVersion.isEmpty
+                ? 'A popup offers each new version. Nothing installs until you say so.'
+                : 'You skipped version ${s.skippedVersion}. Check for updates to see it again.',
+            control: Switch(value: s.checkUpdates, onChanged: (v) => set('updates', 'check_on_launch', v)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -521,6 +531,39 @@ class _PathList extends StatelessWidget {
             ]),
           if (items.length > 3) Text(plural(items.length, 'entry', 'entries'), style: t.bodySmall),
         ],
+      ),
+    );
+  }
+}
+
+class _UpdateRow extends StatelessWidget {
+  const _UpdateRow();
+
+  @override
+  Widget build(BuildContext context) {
+    final app = context.read<AppState>();
+    final updates = context.watch<UpdateState>();
+    return SettingRow(
+      title: 'Updates',
+      description: updates.phase == UpdatePhase.failed && updates.error != null
+          ? updates.error
+          : updates.available != null
+              ? 'Fiend ${updates.available!.version} is available.'
+              : 'Fiend checks ${updates.feed.host} for new versions.',
+      control: FButton(
+        updates.available != null ? 'See what\'s new' : 'Check for updates',
+        icon: Icons.system_update_alt_rounded,
+        dense: true,
+        busy: updates.phase == UpdatePhase.checking,
+        onPressed: () async {
+          final release = updates.available ?? await updates.check(manual: true);
+          if (release != null) {
+            final nav = app.navigator.currentContext;
+            if (nav != null && nav.mounted) await showUpdateDialog(nav, updates, release);
+          } else if (updates.phase != UpdatePhase.failed) {
+            app.toast('You have the latest version of Fiend (${updates.current}).');
+          }
+        },
       ),
     );
   }

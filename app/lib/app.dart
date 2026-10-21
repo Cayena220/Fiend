@@ -6,15 +6,31 @@ import 'state/app_state.dart';
 import 'state/cleaner_state.dart';
 import 'state/disk_state.dart';
 import 'state/shield_state.dart';
+import 'state/update_state.dart';
 import 'theme/theme.dart';
 import 'ui/shell.dart';
 import 'ui/widgets/common.dart';
 import 'ui/widgets/sigil.dart';
+import 'ui/widgets/update_dialog.dart';
 
 class FiendApp extends StatefulWidget {
-  const FiendApp({super.key, required this.bridge, this.desktop = true, this.startAt, this.startOnHealth = false});
+  const FiendApp({
+    super.key,
+    required this.bridge,
+    this.desktop = true,
+    this.startAt,
+    this.startOnHealth = false,
+    this.checkUpdates = false,
+    this.updateFeed,
+  });
 
   final FiendBridge bridge;
+
+  /// Look for a newer release after startup (when the user hasn't turned it off).
+  final bool checkUpdates;
+
+  /// release.json to check instead of the website's (for testing updates).
+  final String? updateFeed;
 
   /// Screen to open first. Shield starts a quick scan and Disk maps the system drive.
   final Section? startAt;
@@ -34,12 +50,24 @@ class _FiendAppState extends State<FiendApp> {
   late final CleanerState cleaner = CleanerState(app);
   late final DiskState disk = DiskState(app);
   late final ShieldState shield = ShieldState(app);
+  late final UpdateState updates = UpdateState(app, feed: widget.updateFeed);
+
+  Future<void> _checkForUpdate() async {
+    // Let the first screen settle before a popup appears over it.
+    await Future<void>.delayed(const Duration(seconds: 2));
+    final release = await updates.check();
+    final context = app.navigator.currentContext;
+    if (release != null && context != null && context.mounted) {
+      await showUpdateDialog(context, updates, release);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     app.init().then((_) {
       if (!app.ready) return;
+      if (widget.checkUpdates && app.settings.checkUpdates) _checkForUpdate();
       cleaner.analyze();
       final start = widget.startAt;
       if (app.settings.scanOnLaunch || start == Section.shield) shield.scan('quick');
@@ -60,12 +88,14 @@ class _FiendAppState extends State<FiendApp> {
         ChangeNotifierProvider.value(value: cleaner),
         ChangeNotifierProvider.value(value: disk),
         ChangeNotifierProvider.value(value: shield),
+        ChangeNotifierProvider.value(value: updates),
       ],
       child: Consumer<AppState>(
         builder: (context, app, _) => MaterialApp(
           title: 'Fiend',
           debugShowCheckedModeBanner: false,
           scaffoldMessengerKey: app.messenger,
+          navigatorKey: app.navigator,
           theme: buildTheme(app.settings),
           home: app.fatal != null
               ? _Fatal(message: app.fatal!)

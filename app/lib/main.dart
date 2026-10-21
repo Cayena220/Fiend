@@ -11,6 +11,7 @@ import 'state/app_state.dart';
 ///   `--demo`             run on sample data instead of this PC (for screenshots and tours)
 ///   `--section=NAME`     open on overview, cleaner, disk, health, shield, quarantine or settings
 ///   `--accent=NAME`      demo only: start with hellfire, ember, toxic, spectral or ice
+///   `--update-feed=URL`  check this release.json for updates instead of the website's
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
@@ -46,5 +47,13 @@ Future<void> main(List<String> args) async {
     await windowManager.focus();
   });
 
-  runApp(FiendApp(bridge: bridge, startAt: section, startOnHealth: arg('section') == 'health'));
+  final feed = arg('update-feed');
+  runApp(FiendApp(
+    bridge: bridge,
+    startAt: section,
+    startOnHealth: arg('section') == 'health',
+    // Demo runs stay offline unless a test feed is given.
+    checkUpdates: !demo || feed != null,
+    updateFeed: feed,
+  ));
 }
