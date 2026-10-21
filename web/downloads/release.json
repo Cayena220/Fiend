@@ -1,14 +1,14 @@
 {
-    "version":  "1.0.0",
-    "built":  "2026-10-20",
+    "version":  "1.1.0",
+    "built":  "2026-10-21",
     "installer":  {
-                      "file":  "Fiend-1.0.0-setup.exe",
-                      "size":  11532867,
-                      "sha256":  "b800feb57a8a14dcbfa5b5a8638bc5355df1d7e6c32cafb4ca04db166190b4e6"
+                      "file":  "Fiend-1.1.0-setup.exe",
+                      "size":  11566832,
+                      "sha256":  "c0cc55718bf88ea20e1fedbb14e54b84f613b2f1b961a3b7130fb6771ee3662d"
                   },
     "zip":  {
-                "file":  "Fiend-1.0.0-win-x64.zip",
-                "size":  12829843,
-                "sha256":  "b5632813c268979c4999d442b374b3d5e7bcf2f65a0cb770064a5c5bf5363bee"
+                "file":  "Fiend-1.1.0-win-x64.zip",
+                "size":  12878883,
+                "sha256":  "9930ecda5ea77c3947bf94f3519e95f367299b32d87e27235b405cdef4412b8c"
             }
 }

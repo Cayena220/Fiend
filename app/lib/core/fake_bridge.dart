@@ -48,8 +48,10 @@ class FakeBridge implements FiendBridge {
         return [
           {'root': r'C:\', 'label': '', 'file_system': 'NTFS', 'kind': 'fixed', 'total': 476 * _gb, 'free': 61 * _gb, 'used': 415 * _gb, 'system': true},
           {'root': r'D:\', 'label': 'Games', 'file_system': 'NTFS', 'kind': 'fixed', 'total': 1863 * _gb, 'free': 702 * _gb, 'used': 1161 * _gb, 'system': false},
-          {'root': r'E:\', 'label': 'Backup', 'file_system': 'exFAT', 'kind': 'removable', 'total': 238 * _gb, 'free': 19 * _gb, 'used': 219 * _gb, 'system': false},
+          {'root': r'E:\', 'label': 'Backup', 'file_system': 'NTFS', 'kind': 'fixed', 'total': 931 * _gb, 'free': 74 * _gb, 'used': 857 * _gb, 'system': false},
         ];
+      case 'drives.health':
+        return _driveHealth;
       case 'quarantine.list':
         return _quarantine;
       case 'quarantine.add':
@@ -96,6 +98,46 @@ class FakeBridge implements FiendBridge {
         return true;
     }
   }
+
+  /// One reading every two weeks over ~10 months, wearing linearly from `from` to `to` percent.
+  static List<Map<String, dynamic>> _history(int from, int to, int hours) {
+    final today = _now ~/ 86400;
+    return [
+      for (var i = 0; i <= 21; i++)
+        {
+          'day': today - (21 - i) * 14,
+          'life': from - ((from - to) * i / 21).round(),
+          'hours': hours - (21 - i) * 60,
+          'written': null,
+        },
+    ];
+  }
+
+  static final _driveHealth = [
+    {
+      'id': 'demo-nvme', 'number': 0, 'model': 'Samsung SSD 980 PRO 500GB', 'serial_tail': '4K2D', 'firmware': '5B2QGXA7',
+      'bus': 'NVMe', 'kind': 'ssd', 'size': 500 * _gb, 'letters': ['C:'], 'source': 'nvme', 'needs_admin': false,
+      'status': 'good', 'reasons': ['No warnings from the drive'],
+      'life_remaining': 91, 'temperature_c': 44, 'power_on_hours': 6120, 'power_cycles': 1834, 'unsafe_shutdowns': 41,
+      'data_written': 61 * 1000 * _gb, 'data_read': 88 * 1000 * _gb, 'media_errors': 0, 'available_spare': 100,
+      'spare_threshold': 10, 'critical_warning': 0, 'projection_hours': 61880, 'history': _history(94, 91, 6120),
+    },
+    {
+      'id': 'demo-sata', 'number': 1, 'model': 'Crucial CT2000MX500SSD1', 'serial_tail': '9E1F', 'firmware': 'M3CR046',
+      'bus': 'SATA', 'kind': 'ssd', 'size': 2000 * _gb, 'letters': ['D:'], 'source': 'smart', 'needs_admin': false,
+      'status': 'caution', 'reasons': ['1 worn sector replaced with spares'],
+      'life_remaining': 64, 'temperature_c': 38, 'power_on_hours': 18950, 'power_cycles': 4021, 'unsafe_shutdowns': 112,
+      'data_written': 214 * 1000 * _gb, 'reallocated': 1, 'pending': 0, 'uncorrectable': 0,
+      'projection_hours': 33689, 'history': _history(68, 64, 18950),
+    },
+    {
+      'id': 'demo-hdd', 'number': 2, 'model': 'WDC WD10EZEX-08WN4A0', 'serial_tail': '7XQ2', 'firmware': '01.01A01',
+      'bus': 'SATA', 'kind': 'hdd', 'size': 1000 * _gb, 'letters': ['E:'], 'source': 'smart', 'needs_admin': false,
+      'status': 'good', 'reasons': ['No warnings from the drive'],
+      'temperature_c': 35, 'power_on_hours': 41200, 'power_cycles': 2210, 'reallocated': 0, 'pending': 0,
+      'uncorrectable': 0, 'projection_hours': null, 'history': [],
+    },
+  ];
 
   static final _startup = [
     {

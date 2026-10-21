@@ -9,6 +9,15 @@ class DiskState extends ChangeNotifier {
 
   final AppState app;
 
+  /// Which half of the Disk screen is showing: space or health.
+  bool showHealth = false;
+
+  void setView({required bool health}) {
+    if (showHealth == health) return;
+    showHealth = health;
+    notifyListeners();
+  }
+
   /// Folders the user drilled into, newest last.
   final List<String> trail = [];
   final Map<String, DiskAnalysis> _cache = {};

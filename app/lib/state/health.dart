@@ -1,4 +1,5 @@
 import '../core/format.dart';
+import '../core/models.dart';
 import 'app_state.dart';
 import 'cleaner_state.dart';
 import 'shield_state.dart';
@@ -42,6 +43,27 @@ class Health {
           : free < 0.2
               ? Factor('storage', 'Storage', detail, Level.warn, 10)
               : Factor('storage', 'Storage', detail, Level.good, 0));
+    }
+
+    final readable = app.driveHealth.where((h) => h.hasData).toList();
+    if (readable.isEmpty) {
+      factors.add(Factor('drives', 'Drive life',
+          app.driveHealth.any((h) => h.needsAdmin) ? 'Restart as admin to read drive health' : 'Drives don\'t report their health',
+          Level.unknown, 0));
+    } else {
+      DriveHealth? pick(String s) => readable.where((h) => h.status == s).firstOrNull;
+      final bad = pick('bad'), caution = pick('caution');
+      // Letters already end in a colon ("D: ..."); a model name gets one.
+      String name(DriveHealth h) => h.letters.isNotEmpty ? h.letters.join(' ') : '${h.model}:';
+      if (bad != null) {
+        factors.add(Factor('drives', 'Drive life', '${name(bad)} ${bad.reasons.first}', Level.bad, 25));
+      } else if (caution != null) {
+        factors.add(Factor('drives', 'Drive life', '${name(caution)} ${caution.reasons.first}', Level.warn, 10));
+      } else {
+        final lives = readable.where((h) => h.lifeRemaining != null).map((h) => '${name(h)} ${h.lifeRemaining}%');
+        factors.add(Factor('drives', 'Drive life',
+            lives.isEmpty ? 'All drives report good health' : 'Healthy: ${lives.join(', ')} life left', Level.good, 0));
+      }
     }
 
     if (!cleaner.measured) {

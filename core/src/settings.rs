@@ -152,6 +152,10 @@ impl Shield {
 pub struct DiskPrefs {
     pub large_file_mb: u64,
     pub top_files: usize,
+    /// c or f
+    pub temperature_unit: String,
+    /// Drive life (percent left) below which a drive is marked for caution.
+    pub life_warning: u8,
 }
 
 impl Default for DiskPrefs {
@@ -159,6 +163,8 @@ impl Default for DiskPrefs {
         Self {
             large_file_mb: 500,
             top_files: 50,
+            temperature_unit: "c".into(),
+            life_warning: 20,
         }
     }
 }

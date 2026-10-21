@@ -12,12 +12,15 @@ import 'ui/widgets/common.dart';
 import 'ui/widgets/sigil.dart';
 
 class FiendApp extends StatefulWidget {
-  const FiendApp({super.key, required this.bridge, this.desktop = true, this.startAt});
+  const FiendApp({super.key, required this.bridge, this.desktop = true, this.startAt, this.startOnHealth = false});
 
   final FiendBridge bridge;
 
   /// Screen to open first. Shield starts a quick scan and Disk maps the system drive.
   final Section? startAt;
+
+  /// With [startAt] Disk: open the drive health view instead of mapping the system drive.
+  final bool startOnHealth;
 
   /// False in widget tests (no native window).
   final bool desktop;
@@ -40,7 +43,11 @@ class _FiendAppState extends State<FiendApp> {
       cleaner.analyze();
       final start = widget.startAt;
       if (app.settings.scanOnLaunch || start == Section.shield) shield.scan('quick');
-      if (start == Section.disk && app.systemDrive != null) disk.open(app.systemDrive!.root);
+      if (widget.startOnHealth) {
+        disk.setView(health: true);
+      } else if (start == Section.disk && app.systemDrive != null) {
+        disk.open(app.systemDrive!.root);
+      }
       if (start != null) app.go(start);
     });
   }

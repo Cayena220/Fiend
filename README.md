@@ -14,7 +14,7 @@
   <img alt="Windows 10 and 11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white">
   <img alt="Rust engine" src="https://img.shields.io/badge/engine-Rust-B7410E?style=flat-square&logo=rust&logoColor=white">
   <img alt="Flutter interface" src="https://img.shields.io/badge/UI-Flutter-02569B?style=flat-square&logo=flutter&logoColor=white">
-  <img alt="Version 1.0.0" src="https://img.shields.io/badge/version-1.0.0-2E2A3B?style=flat-square">
+  <img alt="Version 1.1.0" src="https://img.shields.io/badge/version-1.1.0-2E2A3B?style=flat-square">
 </p>
 
 <p align="center">
@@ -48,6 +48,7 @@
 | **Overview** | One health score built from free space, reclaimable cache, open threats and scan age, with a one-click fix next to each. |
 | **Cleaner** | Measures 13 cache locations: Temp, Windows Update downloads, thumbnails, shader caches, crash dumps, error reports, the Recycle Bin, and Chrome, Edge, Brave and Firefox. It keeps files newer than a day by default, skips files in use, and previews the total before deleting. |
 | **Disk** | Maps a drive or folder in parallel: a treemap of the biggest folders, space by file type, and the largest files with Reveal and Recycle Bin actions. OneDrive placeholders count as 0 bytes. |
+| **Drive health** | Reads each drive's own health data: life left, temperature, hours powered on, data written, power cycles and bad sectors, with a Good, Caution or Bad verdict and a wear trend recorded once a day. NVMe drives work without admin rights; SATA SMART data needs admin. |
 | **Shield** | Scores files 0–100 using evidence you can read, checks a SHA-256 blocklist (MalwareBazaar or your own), verifies Authenticode signatures, reviews everything that starts with Windows, and asks Microsoft Defender about anything serious. |
 | **Quarantine** | Flagged files are moved into a vault with their bytes scrambled so they can't run. Restore puts them back exactly where they were. |
 | **Customize** | Accent, depth, density, corners, glow, motion, Overview card order, and every scan and clean rule. |
@@ -58,6 +59,9 @@
   <tr>
     <td width="50%"><img src="web/assets/cleaner.png" alt="Cleaner: 5.3 GB selected across cache locations, with an age filter and Preview and Clean now buttons"><br><sub><b>Cleaner</b>: preview, then clean, with recent files kept</sub></td>
     <td width="50%"><img src="web/assets/disk.png" alt="Disk: three drives and a treemap of folders on C: with a breakdown by file type"><br><sub><b>Disk</b>: treemap, file types and largest files</sub></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="web/assets/health.png" alt="Drive health: a Samsung NVMe SSD at 91% life left, rated Good, with temperature, hours powered on, data written and a wear trend"><br><sub><b>Drive health</b>: life left, the numbers behind it, and wear over time</sub></td>
   </tr>
   <tr>
     <td width="50%"><img src="web/assets/shield.png" alt="Shield: invoice_0425.pdf.exe flagged High 75 with its reasons and Quarantine, Ask Defender and It's safe buttons"><br><sub><b>Shield</b>: every finding shows its reasons</sub></td>
@@ -107,14 +111,14 @@ Settings live in `%APPDATA%\Fiend\settings.json`.
 
 Get the latest build from **[fiend-delta.vercel.app](https://fiend-delta.vercel.app/#download)**:
 
-- **Installer** (`Fiend-1.0.0-setup.exe`): per user, no admin rights. Installs to
+- **Installer** (`Fiend-1.1.0-setup.exe`): per user, no admin rights. Installs to
   `%LOCALAPPDATA%\Programs\Fiend` with a Start menu shortcut. The uninstaller keeps your
   settings and quarantine unless you tick the box to remove them.
-- **Portable zip** (`Fiend-1.0.0-win-x64.zip`): unzip anywhere and run `Fiend.exe`.
+- **Portable zip** (`Fiend-1.1.0-win-x64.zip`): unzip anywhere and run `Fiend.exe`.
 
 Fiend isn't code-signed yet, so SmartScreen may warn on first run: choose **More info**, then
 **Run anyway**. The site lists the SHA-256 of both files; check yours with
-`Get-FileHash .\Fiend-1.0.0-setup.exe`.
+`Get-FileHash .\Fiend-1.1.0-setup.exe`.
 
 Requires Windows 10 or 11, 64-bit. Run as administrator to clean system-wide caches.
 
@@ -142,7 +146,7 @@ Useful flags:
 
 ```powershell
 Fiend.exe --demo                          # sample data, touches nothing on this PC
-Fiend.exe --demo --section=shield         # open a screen: overview, cleaner, disk, shield, quarantine, settings
+Fiend.exe --demo --section=shield         # open a screen: overview, cleaner, disk, health, shield, quarantine, settings
 Fiend.exe --demo --accent=toxic           # hellfire, ember, toxic, spectral, ice
 ```
 

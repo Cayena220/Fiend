@@ -9,7 +9,7 @@ import 'state/app_state.dart';
 
 /// Command line:
 ///   `--demo`             run on sample data instead of this PC (for screenshots and tours)
-///   `--section=NAME`     open on overview, cleaner, disk, shield, quarantine or settings
+///   `--section=NAME`     open on overview, cleaner, disk, health, shield, quarantine or settings
 ///   `--accent=NAME`      demo only: start with hellfire, ember, toxic, spectral or ice
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ Future<void> main(List<String> args) async {
   String? arg(String name) =>
       args.where((a) => a.startsWith('--$name=')).map((a) => a.substring(name.length + 3)).firstOrNull;
   final demo = args.contains('--demo');
-  final wanted = arg('section') == 'overview' ? 'dashboard' : arg('section');
+  final wanted = switch (arg('section')) { 'overview' => 'dashboard', 'health' => 'disk', final s => s };
   final section = Section.values.where((s) => s.name == wanted).firstOrNull;
 
   FiendBridge bridge = NativeBridge();
@@ -46,5 +46,5 @@ Future<void> main(List<String> args) async {
     await windowManager.focus();
   });
 
-  runApp(FiendApp(bridge: bridge, startAt: section));
+  runApp(FiendApp(bridge: bridge, startAt: section, startOnHealth: arg('section') == 'health'));
 }

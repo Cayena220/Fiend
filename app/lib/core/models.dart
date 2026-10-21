@@ -42,7 +42,7 @@ class Settings {
           'verify_signatures': true,
           'max_file_mb': 200,
         },
-        'disk': {'large_file_mb': 500, 'top_files': 50},
+        'disk': {'large_file_mb': 500, 'top_files': 50, 'temperature_unit': 'c', 'life_warning': 20},
       }));
 
   final Map<String, dynamic> raw;
@@ -96,6 +96,8 @@ class Settings {
 
   int get largeFileMb => get('disk', 'large_file_mb', 500);
   int get topFiles => get('disk', 'top_files', 50);
+  String get temperatureUnit => get('disk', 'temperature_unit', 'c');
+  int get lifeWarning => get('disk', 'life_warning', 20);
 }
 
 class SystemInfo {
@@ -353,6 +355,66 @@ class QuarantineEntry {
         quarantinedAt = _i(j['quarantined_at']);
   final String id, originalPath, name, sha256, reason;
   final int size, score, quarantinedAt;
+}
+
+class HealthPoint {
+  HealthPoint(Map<String, dynamic> j)
+      : day = _i(j['day']),
+        life = _iOrNull(j['life']),
+        written = _iOrNull(j['written']),
+        hours = _iOrNull(j['hours']);
+  final int day;
+  final int? life, written, hours;
+}
+
+/// One physical drive's health, as read from its NVMe log or SMART data.
+class DriveHealth {
+  DriveHealth(Map<String, dynamic> j)
+      : id = _s(j['id']),
+        model = _s(j['model']),
+        serialTail = _s(j['serial_tail']),
+        firmware = _s(j['firmware']),
+        bus = _s(j['bus']),
+        kind = _s(j['kind']),
+        size = _i(j['size']),
+        letters = (j['letters'] as List? ?? const []).map((e) => e.toString()).toList(),
+        source = _s(j['source']),
+        needsAdmin = _b(j['needs_admin']),
+        status = _s(j['status']),
+        reasons = (j['reasons'] as List? ?? const []).map((e) => e.toString()).toList(),
+        lifeRemaining = _iOrNull(j['life_remaining']),
+        temperatureC = _iOrNull(j['temperature_c']),
+        powerOnHours = _iOrNull(j['power_on_hours']),
+        powerCycles = _iOrNull(j['power_cycles']),
+        unsafeShutdowns = _iOrNull(j['unsafe_shutdowns']),
+        dataWritten = _iOrNull(j['data_written']),
+        dataRead = _iOrNull(j['data_read']),
+        mediaErrors = _iOrNull(j['media_errors']),
+        availableSpare = _iOrNull(j['available_spare']),
+        spareThreshold = _iOrNull(j['spare_threshold']),
+        reallocated = _iOrNull(j['reallocated']),
+        pending = _iOrNull(j['pending']),
+        uncorrectable = _iOrNull(j['uncorrectable']),
+        projectionHours = _iOrNull(j['projection_hours']),
+        history = _list(j['history'], HealthPoint.new);
+
+  final String id, model, serialTail, firmware, bus, kind, source, status;
+  final int size;
+  final List<String> letters, reasons;
+  final bool needsAdmin;
+  final int? lifeRemaining, temperatureC, powerOnHours, powerCycles, unsafeShutdowns;
+  final int? dataWritten, dataRead, mediaErrors, availableSpare, spareThreshold;
+  final int? reallocated, pending, uncorrectable, projectionHours;
+  final List<HealthPoint> history;
+
+  bool get hasData => source != 'basic';
+
+  /// "NVMe SSD", "SATA SSD", "SATA HDD", "USB drive".
+  String get kindLabel => switch (kind) {
+        'ssd' => '$bus SSD',
+        'hdd' => '$bus HDD',
+        _ => '$bus drive',
+      };
 }
 
 class JobProgress {

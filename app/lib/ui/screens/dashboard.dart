@@ -11,6 +11,7 @@ import '../../theme/theme.dart';
 import '../../theme/tokens.dart';
 import '../shell.dart';
 import '../widgets/common.dart';
+import '../widgets/drive_health.dart';
 import '../widgets/sigil.dart';
 
 const dashboardCardLabels = {
@@ -146,6 +147,10 @@ class _HealthCard extends StatelessWidget {
               app.go(Section.disk);
             }),
           'clutter' => FButton('Clean', dense: true, onPressed: () => app.go(Section.cleaner)),
+          'drives' => FButton('Details', dense: true, onPressed: () {
+              context.read<DiskState>().setView(health: true);
+              app.go(Section.disk);
+            }),
           'threats' => FButton('Review', dense: true, onPressed: () => app.go(Section.shield)),
           'fresh' => FButton('Quick scan', dense: true, busy: shield.scanning, onPressed: () {
               shield.scan('quick');
@@ -253,6 +258,7 @@ class _DrivesCard extends StatelessWidget {
                       Text(d.letter, style: t.titleMedium!.copyWith(fontFeatures: tabular)),
                       const SizedBox(width: 8),
                       Expanded(child: Text(d.title, style: t.bodyMedium!.copyWith(color: fx.muted))),
+                      if (app.healthFor(d.letter) case final h?) ...[LifePill(h), const SizedBox(width: 10)],
                       Text('${fmtBytes(d.free)} free', style: t.bodyMedium!.copyWith(fontFeatures: tabular)),
                     ],
                   ),

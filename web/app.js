@@ -26,6 +26,7 @@
     overview: 'The Overview rolls storage, clutter, threats and scan age into one health score, with a fix next to each.',
     cleaner: 'Cleaner measures every cache, keeps recent files, and previews the total before anything is deleted.',
     disk: 'Disk maps a drive in seconds: biggest folders as a treemap, space by file type, and the largest files.',
+    health: 'Drive health shows each drive\'s life left, temperature, hours and errors, a Good, Caution or Bad verdict, and its wear over time.',
     shield: 'Shield lists each finding with the evidence behind its score, plus Quarantine, Ask Defender and It\'s safe.',
     customize: 'Customize changes accent, depth, density, corners, glow and motion live, along with every scan and clean rule.',
   };

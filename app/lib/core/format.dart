@@ -43,3 +43,16 @@ String fmtDuration(int ms) {
   if (s < 60) return '${s.toStringAsFixed(1)} s';
   return '${(s ~/ 60)} min ${(s % 60).round()} s';
 }
+
+String fmtTemp(int celsius, String unit) =>
+    unit == 'f' ? '${(celsius * 9 / 5 + 32).round()} °F' : '$celsius °C';
+
+/// A long stretch of time in the largest sensible unit: "40 days", "7 months", "4.7 years".
+String fmtSpan(num hours) {
+  final days = hours / 24;
+  if (days < 60) return plural(days.round(), 'day');
+  final months = days / 30.44;
+  if (months < 24) return plural(months.round(), 'month');
+  final years = days / 365.25;
+  return '${years.toStringAsFixed(years < 10 ? 1 : 0)} years';
+}

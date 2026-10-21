@@ -1,7 +1,7 @@
 //! Method dispatch for the JSON bridge.
 
 use crate::threats::{defender, quarantine, scan, signatures, startup};
-use crate::{cache, disk, jobs, settings, system, win};
+use crate::{cache, disk, health, jobs, settings, system, win};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use serde_json::{json, Value};
@@ -45,6 +45,7 @@ pub fn dispatch(method: &str, p: Value) -> Result<Value, String> {
         "system.reveal" => system::reveal(&path_param(&p)?).map(|_| json!(true)),
 
         "drives.list" => to_value(disk::list_drives()),
+        "drives.health" => to_value(health::report(settings::load().disk.life_warning)),
         "disk.recycle" => {
             let paths: Vec<String> = param(&p, "paths")?;
             let refs: Vec<&Path> = paths.iter().map(Path::new).collect();

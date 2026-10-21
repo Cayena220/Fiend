@@ -179,13 +179,33 @@ class SettingsScreen extends StatelessWidget {
               onChanged: (v) => set('disk', 'top_files', v),
             ),
           ),
+          SettingRow(
+            title: 'Drive temperatures in',
+            control: Segmented<String>(
+              options: const {'c': '°C', 'f': '°F'},
+              value: s.temperatureUnit == 'f' ? 'f' : 'c',
+              onChanged: (v) => set('disk', 'temperature_unit', v),
+            ),
+          ),
+          SettingRow(
+            title: 'Warn when drive life is below',
+            description: 'Drives under this much rated life left are marked Caution.',
+            control: Segmented<int>(
+              options: const {10: '10%', 20: '20%', 30: '30%'},
+              value: const [10, 20, 30].contains(s.lifeWarning) ? s.lifeWarning : 20,
+              onChanged: (v) {
+                set('disk', 'life_warning', v);
+                app.refreshDriveHealth();
+              },
+            ),
+          ),
         ],
       ),
       _Section(
         title: 'About',
         children: [
           SettingRow(
-            title: 'Fiend 1.0',
+            title: 'Fiend 1.1',
             description: 'Engine ${app.system?.coreVersion ?? '?'} · ${app.system?.os ?? ''} build ${app.system?.build ?? ''}',
             control: FButton('Open data folder', icon: Icons.folder_open_outlined, dense: true, onPressed: () => app.reveal(app.system?.dataDir ?? '')),
           ),

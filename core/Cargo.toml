@@ -1,6 +1,6 @@
 ﻿[package]
 name = "fiend_core"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Fiend engine: cache cleaning, disk analysis and threat detection for Windows"
 license = "MIT"
@@ -29,6 +29,7 @@ windows-sys = { version = "0.59", features = [
     "Win32_Security_Cryptography",
     "Win32_System_Registry",
     "Win32_UI_WindowsAndMessaging",
+    "Win32_System_IO",
 ] }
 
 [dev-dependencies]

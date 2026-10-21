@@ -6,6 +6,7 @@
 pub mod api;
 pub mod cache;
 pub mod disk;
+pub mod health;
 pub mod jobs;
 pub mod paths;
 pub mod settings;

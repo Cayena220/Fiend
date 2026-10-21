@@ -39,8 +39,14 @@ class Shell extends StatelessWidget {
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: fx.motion,
+                    // Fill the space so short screens stay at the top instead of centering.
+                    layoutBuilder: (current, previous) => Stack(
+                      fit: StackFit.expand,
+                      children: [...previous, ?current],
+                    ),
                     child: KeyedSubtree(
-                      key: ValueKey(app.section),
+                      // A storage key per screen, so each keeps its own scroll position.
+                      key: PageStorageKey(app.section),
                       child: switch (app.section) {
                         Section.dashboard => const DashboardScreen(),
                         Section.cleaner => const CleanerScreen(),

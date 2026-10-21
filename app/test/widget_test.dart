@@ -85,6 +85,27 @@ void main() {
     expect(bridge.calls, contains('quarantine.add'));
   });
 
+  testWidgets('disk health shows life left, the caution reason and the HDD age', (tester) async {
+    await pumpFiend(tester);
+    await tester.tap(find.text('Disk').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Life 91%'), findsOneWidget, reason: 'life pill on the C: card');
+    await tester.tap(find.text('Health (1)'));
+    await tester.pumpAndSettle();
+    expect(find.text('Samsung SSD 980 PRO 500GB'), findsOneWidget);
+    expect(find.text('91%'), findsOneWidget);
+    expect(find.text('1 worn sector replaced with spares'), findsOneWidget);
+    expect(find.text('4.7 years'), findsOneWidget, reason: 'HDD shows powered-on age instead of a percentage');
+  });
+
+  test('time spans and temperatures read naturally', () {
+    expect(fmtSpan(24 * 10), '10 days');
+    expect(fmtSpan(24 * 200), '7 months');
+    expect(fmtSpan(41200), '4.7 years');
+    expect(fmtTemp(41, 'c'), '41 °C');
+    expect(fmtTemp(41, 'f'), '106 °F');
+  });
+
   testWidgets('changing the accent re-themes the app and saves', (tester) async {
     final bridge = await pumpFiend(tester);
     await tester.tap(find.text('Customize').last);

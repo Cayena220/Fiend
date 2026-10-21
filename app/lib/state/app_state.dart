@@ -18,6 +18,8 @@ class AppState extends ChangeNotifier {
   SystemInfo? system;
   EngineState engine = EngineState(const {});
   List<Drive> drives = [];
+  List<DriveHealth> driveHealth = [];
+  bool readingHealth = false;
   List<QuarantineEntry> quarantine = [];
   int signatureCount = 0;
   int? signaturesUpdatedAt;
@@ -32,6 +34,10 @@ class AppState extends ChangeNotifier {
   bool get isAdmin => system?.admin ?? false;
   Drive? get systemDrive => drives.where((d) => d.system).firstOrNull ?? drives.firstOrNull;
 
+  /// The physical drive a letter such as "C:" lives on, when Windows reported it.
+  DriveHealth? healthFor(String letter) =>
+      driveHealth.where((h) => h.letters.any((l) => l.toUpperCase() == letter.toUpperCase())).firstOrNull;
+
   Future<void> init() async {
     try {
       final s = await bridge.call('settings.get') as Map;
@@ -41,7 +47,7 @@ class AppState extends ChangeNotifier {
       });
       settings = merged;
       system = SystemInfo((await bridge.call('system.info') as Map).cast());
-      await Future.wait([refreshDrives(), refreshEngine(), refreshQuarantine(), refreshSignatures()]);
+      await Future.wait([refreshDrives(), refreshEngine(), refreshQuarantine(), refreshSignatures(), refreshDriveHealth()]);
       ready = true;
     } catch (e) {
       fatal = e.toString();
@@ -90,6 +96,22 @@ class AppState extends ChangeNotifier {
     final s = await bridge.call('settings.reset') as Map;
     settings = Settings(s.cast());
     notifyListeners();
+  }
+
+  /// Reads every physical drive's health. A failure here never blocks the rest of the app.
+  Future<void> refreshDriveHealth() async {
+    readingHealth = true;
+    notifyListeners();
+    try {
+      await flushSettings();
+      final list = await bridge.call('drives.health') as List;
+      driveHealth = list.map((e) => DriveHealth((e as Map).cast())).toList();
+    } catch (e) {
+      driveHealth = [];
+    } finally {
+      readingHealth = false;
+      notifyListeners();
+    }
   }
 
   Future<void> refreshDrives() async {

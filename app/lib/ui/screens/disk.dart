@@ -9,6 +9,7 @@ import '../../state/disk_state.dart';
 import '../../theme/theme.dart';
 import '../shell.dart';
 import '../widgets/common.dart';
+import '../widgets/drive_health.dart';
 import '../widgets/treemap.dart';
 
 class DiskScreen extends StatelessWidget {
@@ -25,15 +26,48 @@ class DiskScreen extends StatelessWidget {
     final disk = context.watch<DiskState>();
     final fx = Fx.of(context);
 
+    final t = Theme.of(context).textTheme;
+    final worst = app.driveHealth.where((h) => h.status == 'bad' || h.status == 'caution').length;
+
     return ScreenBody(children: [
       ScreenHeader(
         title: 'Disk',
-        subtitle: 'See what fills your drives and send the biggest files to the Recycle Bin.',
+        subtitle: 'See what fills your drives, how much life they have left, and clear the biggest files.',
         actions: [
-          FButton('Refresh drives', icon: Icons.refresh_rounded, onPressed: app.refreshDrives),
-          FButton('Map a folder…', icon: Icons.folder_open_outlined, onPressed: () => _pick(disk)),
+          if (disk.showHealth)
+            FButton('Read again', icon: Icons.refresh_rounded, busy: app.readingHealth, onPressed: app.refreshDriveHealth)
+          else ...[
+            FButton('Refresh drives', icon: Icons.refresh_rounded, onPressed: app.refreshDrives),
+            FButton('Map a folder…', icon: Icons.folder_open_outlined, onPressed: () => _pick(disk)),
+          ],
         ],
       ),
+      Row(children: [
+        Segmented<bool>(
+          options: {false: 'Space', true: worst > 0 ? 'Health ($worst)' : 'Health'},
+          value: disk.showHealth,
+          onChanged: (v) => disk.setView(health: v),
+        ),
+      ]),
+      if (disk.showHealth) ...[
+        if (app.driveHealth.isEmpty)
+          Panel(
+            child: EmptyState(
+              icon: Icons.monitor_heart_outlined,
+              title: app.readingHealth ? 'Reading your drives…' : 'No drive health data',
+              body: 'Fiend reads wear, temperature and error counts straight from each drive. Windows didn\'t report any physical drives this time.',
+              action: FButton('Read again', onPressed: app.refreshDriveHealth),
+            ),
+          )
+        else ...[
+          Text(
+            'Life left is the drive\'s own estimate of its rated endurance. Temperatures are shown in '
+            '${app.settings.temperatureUnit == 'f' ? '°F' : '°C'}; change units and the warning level under Customize.',
+            style: t.bodySmall,
+          ),
+          for (final h in app.driveHealth) DriveHealthPanel(h),
+        ],
+      ] else ...[
       LayoutBuilder(builder: (context, box) {
         final cols = box.maxWidth > 1000 ? 3 : 2;
         final w = (box.maxWidth - fx.gap * (cols - 1)) / cols;
@@ -63,6 +97,7 @@ class DiskScreen extends StatelessWidget {
                 : FButton.primary('Map ${app.systemDrive!.letter}', icon: Icons.donut_large_rounded, onPressed: () => disk.open(app.systemDrive!.root)),
           ),
         ),
+      ],
     ]);
   }
 }
@@ -74,6 +109,7 @@ class _DriveCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final disk = context.watch<DiskState>();
+    final health = context.watch<AppState>().healthFor(d.letter);
     final fx = Fx.of(context);
     final t = Theme.of(context).textTheme;
     final color = fullnessColor(context, d.usedFraction);
@@ -95,11 +131,15 @@ class _DriveCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(d.title, style: t.titleSmall),
-                      Text('${d.fileSystem} · ${d.kind}${d.system ? ' · Windows' : ''}', style: t.bodySmall),
+                      Text('${d.fileSystem} · ${d.kind}${d.system && d.label.isNotEmpty ? ' · Windows' : ''}', style: t.bodySmall),
                     ],
                   ),
                 ),
               ),
+              if (health != null) ...[
+                InkWell(onTap: () => disk.setView(health: true), borderRadius: BorderRadius.circular(99), child: LifePill(health)),
+                const SizedBox(width: 6),
+              ],
               Pill('${(d.usedFraction * 100).round()}%', color: color),
             ],
           ),
